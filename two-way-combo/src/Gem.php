@@ -18,7 +18,7 @@ class Gem
     public function get_html(): string {
         $src = "./assets/$this->_color/$this->_category.png";
         $html  = '  <div class="three columns">';
-        $html .= "      <img class=\"u-max-full-width \" id=\"$this->_id\" src=\"$src\">";
+        $html .= "      <img class=\"gem\" id=\"$this->_id\" src=\"$src\">";
         $html .= '  </div>';
         return $html;
     }

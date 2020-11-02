@@ -15,6 +15,8 @@ class Puzzle
     public function get_html(): string {
         $html = '';
         $html .= $this->_green_gems->get_html();
+        $html .= $this->_green_gems->get_html();
+        $html .= $this->_white_gems->get_html();
         $html .= $this->_white_gems->get_html();
         return $html;
     }
