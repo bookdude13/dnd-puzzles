@@ -1,20 +1,3 @@
-* {
-    box-sizing: border-box;
-  }
-
-.column {
-  float: left;
-  width: 25%;
-  padding: 10px;
-}
-
-/* Clearfix (clear floats) */
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-div 
-{
-  background-image: url('wall_stone.jpg');
-}
+/*body {
+  background-image: url('../assets/wall_stone.jpg');
+}*/
