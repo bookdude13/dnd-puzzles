@@ -2,16 +2,16 @@
 
 require __DIR__ . '/Gem.php';
 
-class GreenGemRow
+class GemRow
 {
-    private array $_gems;
+    protected array $_gems;
 
-    public function __construct() {
+    public function __construct( string $color ) {
         $num_gems = 4;
         $this->_gems = array();
         for ($i = 0; $i < $num_gems; $i++) {
             $id = '';
-            $this->_gems[] = new Gem( $id, 'green' );
+            $this->_gems[] = new Gem( $id, $color );
         }
     }
 
