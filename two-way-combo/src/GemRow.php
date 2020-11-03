@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/Gem.php';
+require_once __DIR__ . '/Gem.php';
 
 class GemRow
 {
