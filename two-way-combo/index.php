@@ -1,6 +1,8 @@
 <?php
-    require_once 'src/models/Puzzle.php';
-    require_once 'src/state/RoomState.php';
+
+require_once 'src/models/Puzzle.php';
+require_once 'src/state/RoomState.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -18,12 +20,21 @@
 </head>
 <body>
     <div class="container">
-
-    <!-- TODO list currently running rooms here -->
-
         <div class="row">
             <h1 class="u-full-width text-center">Two Way Combo</h1>
-            <button class="center">Generate Rooms</button>
+        </div>
+        <div class="row">
+            <button class="button-primary center" id="btn-generate-rooms">Generate Rooms</button>
+        </div>
+        <div class="row">
+            <div class="one-third column">
+                <span>Room A: </span><span id="room-a-id">Not generated</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="one-third column">
+                <span>Room B: </span><span id="room-b-id">Not generated</span>
+            </div>
         </div>
     </div>
 </body>
