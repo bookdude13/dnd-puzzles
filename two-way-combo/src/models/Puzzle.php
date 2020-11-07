@@ -1,10 +1,11 @@
 <?php
 
+require_once __DIR__ . '/iRenderable.php';
 require_once __DIR__ . '/GemRow.php';
 require_once __DIR__ . '/GemWheelRow.php';
 require_once __DIR__ . '/LightRow.php';
 
-class Puzzle
+class Puzzle implements iRenderable
 {
     private LightRow $_light_row;
     private GemRow $_green_gems;

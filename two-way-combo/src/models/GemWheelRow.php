@@ -1,8 +1,9 @@
 <?php
 
+require_once __DIR__ . '/iRenderable.php';
 require_once __DIR__ . '/GemWheel.php';
 
-class GemWheelRow
+class GemWheelRow implements iRenderable
 {
     protected array $_wheels;
     private string $_id;

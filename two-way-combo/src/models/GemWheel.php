@@ -1,6 +1,8 @@
 <?php
 
-class GemWheel
+require_once __DIR__ . '/iRenderable.php';
+
+class GemWheel implements iRenderable
 {
     private string $_id;
     private string $_color;

@@ -1,4 +1,4 @@
-<?php require 'src/Puzzle.php' ?>
+<?php require 'src/models/Puzzle.php' ?>
 
 <!DOCTYPE html>
 <html>

@@ -1,6 +1,8 @@
 <?php
 
-class Light
+require_once __DIR__ . '/iRenderable.php';
+
+class Light implements iRenderable
 {
     private string $_id;
     private string $_state;

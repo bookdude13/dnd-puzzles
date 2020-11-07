@@ -1,8 +1,9 @@
 <?php
 
+require_once __DIR__ . '/iRenderable.php';
 require_once __DIR__ . '/Light.php';
 
-class LightRow
+class LightRow implements iRenderable
 {
     protected array $_lights;
     private string $_id;

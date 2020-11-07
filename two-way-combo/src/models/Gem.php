@@ -1,6 +1,8 @@
 <?php
 
-class Gem
+require_once __DIR__ . '/iRenderable.php';
+
+class Gem implements iRenderable
 {
     private string $_id;
     private string $_color;
