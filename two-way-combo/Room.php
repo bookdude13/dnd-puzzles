@@ -1,4 +1,20 @@
 <?php
+    require_once 'src/Validation.php';
+
+    $room_id = get_validated_room_id( $_REQUEST );
+    if ( null === $room_id ) {
+?>
+
+<!DOCTYPE html>
+<html>
+<head> <title>Room A</title> </head>
+<body> <h2>Room Not Found</h2> </body>
+</html>
+
+<?php
+        return;
+    }
+
     require_once 'src/models/Puzzle.php';
     require_once 'src/state/RoomState.php';
 ?>
@@ -19,12 +35,12 @@
 <body>
     <div class="container">
 
-    <!-- TODO list currently running rooms here -->
+    <?php
+    $room_state = RoomState::create_new();
+    $puzzle = new Puzzle( $room_state );
+    echo $puzzle->get_html();
+    ?>
 
-        <div class="row">
-            <h1 class="u-full-width text-center">Two Way Combo</h1>
-            <button class="center">Generate Rooms</button>
-        </div>
     </div>
 </body>
 </html>

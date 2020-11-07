@@ -13,6 +13,10 @@
   display: block;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .gem-wheel {
   max-width: 100%;
   box-sizing: border-box;
