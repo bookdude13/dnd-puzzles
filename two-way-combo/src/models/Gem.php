@@ -1,20 +1,18 @@
 <?php
 
 require_once __DIR__ . '/iRenderable.php';
+require_once __DIR__ . '/../Constants.php';
 
 class Gem implements iRenderable
 {
     private string $_id;
     private string $_color;
     private string $_category;
-    private array $_categories = array(
-        'birth', 'death', 'healing', 'love', 'protection', 'return', 'strength', 'war'
-    );
 
-    public function __construct( string $id, string $color ) {
+    public function __construct( string $id, string $color, string $state ) {
         $this->_id = $id;
         $this->_color = $color;
-        $this->_category = $this->_categories[0];
+        $this->_category = $state;
     }
 
     public function get_html(): string {

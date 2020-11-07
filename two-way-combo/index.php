@@ -1,4 +1,7 @@
-<?php require 'src/models/Puzzle.php' ?>
+<?php
+    require_once 'src/models/Puzzle.php';
+    require_once 'src/state/RoomState.php';
+?>
 
 <!DOCTYPE html>
 <html>
@@ -17,7 +20,8 @@
     <div class="container">
 
     <?php
-    $puzzle = new Puzzle();
+    $room_state = RoomState::create_new();
+    $puzzle = new Puzzle( $room_state );
     echo $puzzle->get_html();
     ?>
 

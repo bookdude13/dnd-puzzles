@@ -5,16 +5,20 @@ require_once __DIR__ . '/Gem.php';
 
 class GemRow implements iRenderable
 {
-    protected array $_gems;
+    protected array $_gems = array();
     private string $_id;
 
-    public function __construct( string $color ) {
+    public function __construct( string $color, array $gem_states ) {
         $num_gems = 4;
-        $this->_gems = array();
+        if ( count( $gem_states) !== $num_gems ) {
+            error_log( "Gem states inconsistent! " . json_encode( $gem_states ) );
+            return;
+        }
+
         $this->_id = 'gem-row-' . $color;
         for ($i = 0; $i < $num_gems; $i++) {
             $id = 'gem-' . $color . '-' . strval($i);
-            $this->_gems[] = new Gem( $id, $color );
+            $this->_gems[] = new Gem( $id, $color, $gem_states[$i] );
         }
     }
 
