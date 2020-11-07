@@ -21,6 +21,9 @@ if ( null === $room_id ) {
 require_once 'src/models/Puzzle.php';
 require_once 'src/state/RoomState.php';
 
+// TODO - Get state
+$room_state = RoomState::create_new();
+
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +43,6 @@ require_once 'src/state/RoomState.php';
     <div class="container">
 
     <?php
-    $room_state = RoomState::create_new();
     $puzzle = new Puzzle( $room_state );
     echo $puzzle->get_html();
     ?>

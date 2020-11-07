@@ -17,7 +17,7 @@ function get_validated_room_id( array $input ): ?string {
 
 // Props Joel-James https://gist.github.com/Joel-James/3a6201861f12a7acf4f2
 function is_valid_uuid( $uuid ) {
-    if ( !is_string( $uuid ) || ( preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid ) !== 1) ) {
+    if ( !is_string( $uuid ) || ( preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/', $uuid ) !== 1) ) {
         return false;
     }
 

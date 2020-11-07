@@ -27,13 +27,13 @@ require_once 'src/state/RoomState.php';
             <button class="button-primary center" id="btn-generate-rooms">Generate Rooms</button>
         </div>
         <div class="row">
-            <div class="one-third column">
-                <span>Room A: </span><span id="room-a-id">Not generated</span>
+            <div class="u-full-width">
+                <span>Room A: </span><pre><code id="room-a-link">Not generated</code></pre>
             </div>
         </div>
         <div class="row">
-            <div class="one-third column">
-                <span>Room B: </span><span id="room-b-id">Not generated</span>
+            <div class="u-full-width">
+                <span>Room B: </span><pre><code id="room-b-link">Not generated</code></pre>
             </div>
         </div>
     </div>

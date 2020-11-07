@@ -2,10 +2,23 @@
 $(document).ready(function() {
     /* Main Menu */
     $("#btn-generate-rooms").click(function() {
-        console.log(window.location);
         let baseUrl = window.location.href;
         let generateUrl = baseUrl + 'generate.php';
-        console.log(generateUrl);
+
+        let errorHandler = (message) => {
+            console.error("Failed to generate rooms: " + message);
+        };
+
+        let successHandler = (data) => {
+            let rooms = data["rooms"];
+            let idRoomA = encodeURIComponent( rooms["A"] );
+            let urlRoomA = window.location.href + "room.php?rid=" + idRoomA;
+            $("#room-a-link").text(urlRoomA);
+
+            let idRoomB = encodeURIComponent( rooms["B"] );
+            let urlRoomB = window.location.href + "room.php?rid=" + idRoomB;
+            $("#room-b-link").text(urlRoomB);
+        };
 
         $.ajax({
             method: "POST",
@@ -13,11 +26,15 @@ $(document).ready(function() {
             data: {},
             dataType: "json",
             timeout: 2000,
-            success: function(data, textStatus, jqXHR) {
-                console.log("success");
+            success: function(res, textStatus, jqXHR) {
+                if (res.success !== true) {
+                    errorHandler(JSON.stringify(res.errors));
+                } else {
+                    successHandler(res.data);
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Failed to generate rooms");
+                errorHandler(errorThrown);
             }
         })
     });
