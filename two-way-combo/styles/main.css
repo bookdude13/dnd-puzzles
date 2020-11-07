@@ -11,10 +11,19 @@
   margin-left: auto;
   margin-right: auto;
   display: block;
-
 }
 
 .gem-wheel {
   max-width: 100%;
   box-sizing: border-box;
+}
+
+.btn-rotate-left {
+  width: 45%;
+  float: left;
+}
+
+.btn-rotate-right {
+  width: 45%;
+  float: right;
 }
