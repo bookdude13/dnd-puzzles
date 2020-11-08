@@ -33,7 +33,7 @@ $room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Room A</title>
+    <title>Room</title>
     <link rel="stylesheet" href="styles/main.css">
 
     <!-- Skeleton styling -->

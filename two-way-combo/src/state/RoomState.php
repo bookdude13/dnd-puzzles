@@ -41,19 +41,19 @@ class RoomState
     }
 
     public static function create_new(): RoomState {
-        $default_category = Constants::$gem_categories[0];
-        $default_category_state = array(
-            $default_category,
-            $default_category,
-            $default_category,
-            $default_category
-        );
+        $green_gem_states = Constants::$gem_categories;
+        $white_gem_states = Constants::$gem_categories;
+        $wheel_states = Constants::$gem_categories;
+
+        shuffle( $green_gem_states );
+        shuffle( $white_gem_states );
+        shuffle( $wheel_states );
 
         return new RoomState(
             array( false, false ),
-            $default_category_state,
-            $default_category_state,
-            $default_category_state
+            $green_gem_states,
+            $white_gem_states,
+            $wheel_states
         );
     }
 

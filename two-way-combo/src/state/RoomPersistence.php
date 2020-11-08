@@ -74,6 +74,11 @@ class RoomPersistence
             $room_id_a,
             $room_id_b
         ]);
+
+        $this->stmt_insert_room_pair->execute([
+            $room_id_b,
+            $room_id_a
+        ]);
     }
 
     private function _clear_rooms(): void {
