@@ -41,16 +41,10 @@ $room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
     <link rel="stylesheet" href="styles/skeleton.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="./src/js/main.js"></script>
+    <script src="./src/js/utility.js"></script>
+    <script src="./src/js/room.js"></script>
 </head>
 <body>
-    <div class="container">
-
-    <?php
-    $puzzle = new Puzzle( $room_state );
-    echo $puzzle->get_html();
-    ?>
-
-    </div>
+    <div class="container" id="puzzle-container"></div>
 </body>
 </html>

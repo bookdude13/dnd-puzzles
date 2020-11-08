@@ -1,33 +1,5 @@
 
 $(document).ready(function() {
-    /* Utility */
-    function doAjaxPost( url, data, onSuccess, onError ) {
-        $.ajax({
-            method: "POST",
-            url: url,
-            data: data,
-            dataType: "json",
-            timeout: 2000,
-            success: function(res, textStatus, jqXHR) {
-                if (res.success !== true) {
-                    onError(JSON.stringify(res.errors));
-                } else {
-                    onSuccess(res.data);
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                onError(errorThrown);
-            }
-        });
-    }
-
-    function updateMessage(color, message) {
-        let messageElement = $("#message");
-        messageElement.css('color', color);
-        messageElement.text(message);
-    }
-
-    /* Main Menu */
     $("#btn-generate-rooms").click(function() {
         let baseUrl = window.location.href;
         let generateUrl = baseUrl + 'generate.php';
@@ -71,13 +43,4 @@ $(document).ready(function() {
     function setRoomLink(id, url) {
         $(id).html("<a target=\"_blank\" href=\"" + url + "\">" + url + "</a>");
     }
-
-    /* Room */
-    $(".btn-rotate-left").click(function() {
-        let index = $(this).data('index');
-    });
-
-    $(".btn-rotate-right").click(function() {
-        console.log("right");
-    });
 });

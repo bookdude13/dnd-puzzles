@@ -16,6 +16,7 @@ require_once 'src/state/RoomState.php';
     <link rel="stylesheet" href="styles/skeleton.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./src/js/utility.js"></script>
     <script src="./src/js/main.js"></script>
 </head>
 <body>
