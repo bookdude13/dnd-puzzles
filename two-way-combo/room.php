@@ -15,19 +15,6 @@ if ( null === $room_id ) {
     echo get_error_page();
     return;
 }
-
-require_once 'src/models/Puzzle.php';
-require_once 'src/state/RoomState.php';
-require_once 'src/state/RoomPersistence.php';
-
-$rooms = RoomPersistence::instance()->get_rooms( $room_id );
-if ( null === $rooms || 2 !== count( $rooms ) ) {
-    echo get_error_page();
-    return;
-}
-
-$room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
-
 ?>
 
 <!DOCTYPE html>
