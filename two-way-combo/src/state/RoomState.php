@@ -57,7 +57,61 @@ class RoomState
         );
     }
 
+    private static function _get_light_state( $wheel_states, $code ): bool {
+        $is_match = true;
+        for ( $i = 0; $i < count( $wheel_states ); $i++ ) {
+            if ( $wheel_states[$i] !== $code[$i] ) {
+                $is_match = false;
+            }
+        }
+        return $is_match;
+    }
+
+    /**
+     * Room A is the room state we're creating. It's paired room is room B.
+     */
     public static function from_dto_rooms( DtoRoom $room_a, DtoRoom $room_b ): RoomState {
-        return self::create_new();
+        
+        $green_gem_states = array(
+            $room_b->wheel_0,
+            $room_b->wheel_1,
+            $room_b->wheel_2,
+            $room_b->wheel_3
+        );
+
+        $code_a = array(
+            $room_a->code_0,
+            $room_a->code_1,
+            $room_a->code_2,
+            $room_a->code_3
+        );
+
+        $code_b = array(
+            $room_b->code_0,
+            $room_b->code_1,
+            $room_b->code_2,
+            $room_b->code_3
+        );
+
+        $wheel_states_a = array(
+            $room_a->wheel_0,
+            $room_a->wheel_1,
+            $room_a->wheel_2,
+            $room_a->wheel_3
+        );
+
+        $wheel_states_b = array(
+            $room_b->wheel_0,
+            $room_b->wheel_1,
+            $room_b->wheel_2,
+            $room_b->wheel_3
+        );
+
+        $light_states = array(
+            self::_get_light_state( $wheel_states_a, $code_b ),
+            self::_get_light_state( $wheel_states_b, $code_a )
+        );
+
+        return new RoomState( $light_states, $wheel_states_b, $code_a, $wheel_states_a );
     }
 }

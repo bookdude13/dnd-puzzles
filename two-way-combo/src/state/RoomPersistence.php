@@ -25,8 +25,12 @@ class RoomPersistence
         $pdo = Persistence::get_pdo();
 
         $this->stmt_insert_room = $pdo->prepare(
-            "INSERT INTO twowaycombo_room (room_id, wheel_0, wheel_1, wheel_2, wheel_3)
-            VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO twowaycombo_room (
+                room_id,
+                code_0, code_1, code_2, code_3,
+                wheel_0, wheel_1, wheel_2, wheel_3
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $this->stmt_insert_room_pair = $pdo->prepare(
             "INSERT INTO twowaycombo_room_pair (room_id_a, room_id_b)
@@ -54,6 +58,10 @@ class RoomPersistence
     private function _add_room( RoomState $room ): void {
         $this->stmt_insert_room->execute([
             $room->id,
+            $room->white_gem_states[0],
+            $room->white_gem_states[1],
+            $room->white_gem_states[2],
+            $room->white_gem_states[3],
             $room->wheel_states[0],
             $room->wheel_states[1],
             $room->wheel_states[2],

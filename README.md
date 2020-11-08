@@ -24,6 +24,10 @@ GRANT ALL ON dndpuzzles.* TO 'dndpuzzles'@'%';
 CREATE TABLE IF NOT EXISTS twowaycombo_room (
     room_id CHAR(36) PRIMARY KEY,
     creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    code_0 VARCHAR(16) NOT NULL,
+    code_1 VARCHAR(16) NOT NULL,
+    code_2 VARCHAR(16) NOT NULL,
+    code_3 VARCHAR(16) NOT NULL,
     wheel_0 VARCHAR(16) NOT NULL,
     wheel_1 VARCHAR(16) NOT NULL,
     wheel_2 VARCHAR(16) NOT NULL,
