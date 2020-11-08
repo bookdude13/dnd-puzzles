@@ -9,6 +9,8 @@ class RoomPersistence
 
     private PDOStatement $stmt_insert_room;
     private PDOStatement $stmt_insert_room_pair;
+    private PDOStatement $stmt_clear_rooms;
+    private PDOStatement $stmt_clear_room_pairs;
 
     public static function instance(): RoomPersistence {
         if ( null === self::$_instance ) {
@@ -29,6 +31,12 @@ class RoomPersistence
             "INSERT INTO twowaycombo_room_pair (room_id_a, room_id_b)
             VALUES (?, ?)"
         );
+        $this->stmt_clear_rooms = $pdo->prepare(
+            "DELETE FROM twowaycombo_room"
+        );
+        $this->stmt_clear_room_pairs = $pdo->prepare(
+            "DELETE FROM twowaycombo_room_pair"
+        );
     }
 
     private function _add_room( RoomState $room ): void {
@@ -48,6 +56,11 @@ class RoomPersistence
         ]);
     }
 
+    private function _clear_rooms(): void {
+        $this->stmt_clear_room_pairs->execute();
+        $this->stmt_clear_rooms->execute();
+    }
+
     public function add_rooms( RoomState $room_a, RoomState $room_b ): bool {
         try {
             $this->_add_room( $room_a );
@@ -58,6 +71,17 @@ class RoomPersistence
             return false;
         }
         
+        return true;
+    }
+
+    public function clear_rooms(): bool {
+        try {
+            $this->_clear_rooms();
+        } catch ( PDOException $ex ) {
+            error_log( "Failed to clear rooms: " . $ex->getMessage() );
+            return false;
+        }
+
         return true;
     }
 }

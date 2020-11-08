@@ -26,7 +26,4 @@ if ( true === $persist_result ) {
     $response["errors"][] = "Failed to store generated rooms on server";
 }
 
-
 echo json_encode($response);
-
-

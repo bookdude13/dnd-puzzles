@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
     /* Utility */
-    function doAjaxPost( url, data, onSuccess, onFailure ) {
+    function doAjaxPost( url, data, onSuccess, onError ) {
         $.ajax({
             method: "POST",
             url: url,
@@ -21,6 +21,12 @@ $(document).ready(function() {
         });
     }
 
+    function updateMessage(color, message) {
+        let messageElement = $("#message");
+        messageElement.css('color', color);
+        messageElement.text(message);
+    }
+
     /* Main Menu */
     $("#btn-generate-rooms").click(function() {
         let baseUrl = window.location.href;
@@ -34,15 +40,37 @@ $(document).ready(function() {
             let rooms = data["rooms"];
             let idRoomA = encodeURIComponent( rooms["A"] );
             let urlRoomA = window.location.href + "room.php?rid=" + idRoomA;
-            $("#room-a-link").html("<a target=\"_blank\" href=\"" + urlRoomA + "\">" + urlRoomA + "</a>");
+            setRoomLink("#room-a-link", urlRoomA);
 
             let idRoomB = encodeURIComponent( rooms["B"] );
             let urlRoomB = window.location.href + "room.php?rid=" + idRoomB;
-            $("#room-b-link").html("<a target=\"_blank\" href=\"" + urlRoomB + "\">" + urlRoomB + "</a>");
+            setRoomLink("#room-b-link", urlRoomB);
         };
 
         doAjaxPost( generateUrl, {}, successHandler, errorHandler );
     });
+
+    $("#btn-clear-rooms").click(function() {
+        let baseUrl = window.location.href;
+        let generateUrl = baseUrl + 'clear_rooms.php';
+
+        let errorHandler = (message) => {
+            console.error("Failed to clear rooms: " + message);
+            updateMessage("red", "Failed to clear rooms.");
+        };
+
+        let successHandler = (data) => {
+            updateMessage("black", "Cleared rooms.");
+            setRoomLink("#room-a-link", "");
+            setRoomLink("#room-b-link", "");
+        };
+
+        doAjaxPost( generateUrl, {}, successHandler, errorHandler );
+    });
+
+    function setRoomLink(id, url) {
+        $(id).html("<a target=\"_blank\" href=\"" + url + "\">" + url + "</a>");
+    }
 
     /* Room */
     $(".btn-rotate-left").click(function() {

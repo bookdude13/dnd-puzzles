@@ -28,12 +28,24 @@ require_once 'src/state/RoomState.php';
         </div>
         <div class="row">
             <div class="u-full-width">
-                <span>Room A: </span><span id="room-a-link">Not generated</span>
+                <span>Room A: </span><a href="" id="room-a-link"></a>
             </div>
         </div>
         <div class="row">
             <div class="u-full-width">
-                <span>Room B: </span><span id="room-b-link">Not generated</span>
+                <span>Room B: </span><a href="" id="room-b-link"></a>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <h2 class="u-full-width text-center">Admin</h2>
+        </div>
+        <div class="row">
+            <div class="three columns">
+                <button class="button-primary" id="btn-clear-rooms">Clear All Rooms</button>
+            </div>
+            <div class="nine columns">
+                <span id="message"></span>
             </div>
         </div>
     </div>
