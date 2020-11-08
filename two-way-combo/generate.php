@@ -12,7 +12,7 @@ $response = array(
     "errors" => array()
 );
 
-$persist_result = RoomPersistence::add_rooms( $room_state_a, $room_state_b );
+$persist_result = RoomPersistence::instance()->add_rooms( $room_state_a, $room_state_b );
 if ( true === $persist_result ) {
     $response["success"] = true;
     $response["data"] = array(
