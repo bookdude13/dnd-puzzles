@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/Persistence.php";
 require_once __DIR__ . "/RoomState.php";
+require_once __DIR__ . "/DtoRoom.php";
 
 class RoomPersistence
 {
@@ -30,6 +31,17 @@ class RoomPersistence
         $this->stmt_insert_room_pair = $pdo->prepare(
             "INSERT INTO twowaycombo_room_pair (room_id_a, room_id_b)
             VALUES (?, ?)"
+        );
+        $this->stmt_get_room = $pdo->prepare(
+            "SELECT * FROM twowaycombo_room
+            WHERE room_id = ?"
+        );
+        $this->stmt_get_other_room = $pdo->prepare(
+            "SELECT * FROM twowaycombo_room
+            WHERE room_id = (
+                SELECT room_id_b FROM twowaycombo_room_pair
+                WHERE room_id_a = ?
+            )"
         );
         $this->stmt_clear_rooms = $pdo->prepare(
             "DELETE FROM twowaycombo_room"
@@ -61,6 +73,26 @@ class RoomPersistence
         $this->stmt_clear_rooms->execute();
     }
 
+    private function _get_room( string $room_id ): DtoRoom {
+        $this->stmt_get_room->setFetchMode( PDO::FETCH_CLASS, "DtoRoom" );
+        $this->stmt_get_room->execute([ $room_id ]);
+        $result = $this->stmt_get_room->fetch();
+        if ( false === $result ) {
+            throw new Exception("RoomNotFound");
+        }
+        return $result;
+    }
+
+    private function _get_other_room( string $room_id ): DtoRoom {
+        $this->stmt_get_other_room->setFetchMode( PDO::FETCH_CLASS, "DtoRoom" );
+        $this->stmt_get_other_room->execute([ $room_id ]);
+        $result = $this->stmt_get_other_room->fetch();
+        if ( false === $result ) {
+            throw new Exception("RoomNotFound");
+        }
+        return $result;
+    }
+
     public function add_rooms( RoomState $room_a, RoomState $room_b ): bool {
         try {
             $this->_add_room( $room_a );
@@ -83,5 +115,20 @@ class RoomPersistence
         }
 
         return true;
+    }
+
+    public function get_rooms( string $primary_room_id ): ?array {
+        try {
+            $room_a = $this->_get_room( $primary_room_id );
+            $room_b = $this->_get_other_room( $primary_room_id );
+        } catch ( Exception $ex ) {
+            error_log( "Failed to get rooms: " . $ex->getMessage() );
+            return null;
+        }
+
+        return array(
+            "room_a" => $room_a,
+            "room_b" => $room_b
+        );
     }
 }

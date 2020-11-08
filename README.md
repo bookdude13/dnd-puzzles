@@ -31,9 +31,8 @@ CREATE TABLE IF NOT EXISTS twowaycombo_room (
 );
 
 CREATE TABLE IF NOT EXISTS twowaycombo_room_pair (
-    room_id_a CHAR(36),
-    room_id_b CHAR(36),
-    PRIMARY KEY (room_id_a, room_id_b),
+    room_id_a CHAR(36) PRIMARY KEY,
+    room_id_b CHAR(36) NOT NULL,
     FOREIGN KEY (room_id_a) REFERENCES twowaycombo_room (room_id),
     FOREIGN KEY (room_id_b) REFERENCES twowaycombo_room (room_id)
 );

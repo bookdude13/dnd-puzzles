@@ -2,27 +2,31 @@
 
 require_once 'src/Validation.php';
 
-$room_id = get_validated_room_id( $_REQUEST );
-if ( null === $room_id ) {
-
-?>
-
-<!DOCTYPE html>
+function get_error_page() {
+    return "<!DOCTYPE html>
 <html>
 <head> <title>Room Not Found</title> </head>
 <body> <h2>Room Not Found</h2> </body>
-</html>
+</html>";
+}
 
-<?php
-
+$room_id = get_validated_room_id( $_REQUEST );
+if ( null === $room_id ) {
+    echo get_error_page();
     return;
 }
 
 require_once 'src/models/Puzzle.php';
 require_once 'src/state/RoomState.php';
+require_once 'src/state/RoomPersistence.php';
 
-// TODO - Get state
-$room_state = RoomState::create_new();
+$rooms = RoomPersistence::instance()->get_rooms( $room_id );
+if ( null === $rooms || 2 !== count( $rooms ) ) {
+    echo get_error_page();
+    return;
+}
+
+$room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
 
 ?>
 

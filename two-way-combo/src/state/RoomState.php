@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../Constants.php';
+require_once __DIR__ . '/DtoRoom.php';
 
 class RoomState
 {
@@ -54,5 +55,9 @@ class RoomState
             $default_category_state,
             $default_category_state
         );
+    }
+
+    public static function from_dto_rooms( DtoRoom $room_a, DtoRoom $room_b ): RoomState {
+        return self::create_new();
     }
 }
