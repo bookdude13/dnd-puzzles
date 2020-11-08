@@ -1,5 +1,26 @@
 
 $(document).ready(function() {
+    /* Utility */
+    function doAjaxPost( url, data, onSuccess, onFailure ) {
+        $.ajax({
+            method: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            timeout: 2000,
+            success: function(res, textStatus, jqXHR) {
+                if (res.success !== true) {
+                    onError(JSON.stringify(res.errors));
+                } else {
+                    onSuccess(res.data);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                onError(errorThrown);
+            }
+        });
+    }
+
     /* Main Menu */
     $("#btn-generate-rooms").click(function() {
         let baseUrl = window.location.href;
@@ -13,30 +34,14 @@ $(document).ready(function() {
             let rooms = data["rooms"];
             let idRoomA = encodeURIComponent( rooms["A"] );
             let urlRoomA = window.location.href + "room.php?rid=" + idRoomA;
-            $("#room-a-link").text(urlRoomA);
+            $("#room-a-link").html("<a target=\"_blank\" href=\"" + urlRoomA + "\">" + urlRoomA + "</a>");
 
             let idRoomB = encodeURIComponent( rooms["B"] );
             let urlRoomB = window.location.href + "room.php?rid=" + idRoomB;
-            $("#room-b-link").text(urlRoomB);
+            $("#room-b-link").html("<a target=\"_blank\" href=\"" + urlRoomB + "\">" + urlRoomB + "</a>");
         };
 
-        $.ajax({
-            method: "POST",
-            url: generateUrl,
-            data: {},
-            dataType: "json",
-            timeout: 2000,
-            success: function(res, textStatus, jqXHR) {
-                if (res.success !== true) {
-                    errorHandler(JSON.stringify(res.errors));
-                } else {
-                    successHandler(res.data);
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                errorHandler(errorThrown);
-            }
-        })
+        doAjaxPost( generateUrl, {}, successHandler, errorHandler );
     });
 
     /* Room */

@@ -28,12 +28,12 @@ require_once 'src/state/RoomState.php';
         </div>
         <div class="row">
             <div class="u-full-width">
-                <span>Room A: </span><pre><code id="room-a-link">Not generated</code></pre>
+                <span>Room A: </span><span id="room-a-link">Not generated</span>
             </div>
         </div>
         <div class="row">
             <div class="u-full-width">
-                <span>Room B: </span><pre><code id="room-b-link">Not generated</code></pre>
+                <span>Room B: </span><span id="room-b-link">Not generated</span>
             </div>
         </div>
     </div>
