@@ -24,31 +24,18 @@ require_once 'src/state/RoomState.php';
         <div class="row">
             <h1 class="u-full-width text-center">Two Way Combo</h1>
         </div>
-        <div class="row">
-            <button class="button-primary center" id="btn-generate-rooms">Generate Rooms</button>
+        <div class="row text-center">
+            <button class="button-primary" id="btn-generate-rooms">Generate Rooms</button>
+            <button class="button-primary" id="btn-clear-rooms">Clear All Rooms</button>
         </div>
-        <div class="row">
-            <div class="u-full-width">
-                <span>Room A: </span><a href="" id="room-a-link"></a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="u-full-width">
-                <span>Room B: </span><a href="" id="room-b-link"></a>
-            </div>
+        <div class="row text-center">
+            <span id="message" class="u-full-width text-center"></span>
         </div>
         <hr />
         <div class="row">
-            <h2 class="u-full-width text-center">Admin</h2>
+            <h2 class="u-full-width text-center">Rooms</h2>
         </div>
-        <div class="row">
-            <div class="three columns">
-                <button class="button-primary" id="btn-clear-rooms">Clear All Rooms</button>
-            </div>
-            <div class="nine columns">
-                <span id="message"></span>
-            </div>
-        </div>
+        <div id="room-container"></div>
     </div>
 </body>
 </html>

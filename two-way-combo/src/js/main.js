@@ -12,11 +12,11 @@ $(document).ready(function() {
             let rooms = data["rooms"];
             let idRoomA = encodeURIComponent( rooms["A"] );
             let urlRoomA = window.location.href + "room.php?rid=" + idRoomA;
-            setRoomLink("#room-a-link", urlRoomA);
-
             let idRoomB = encodeURIComponent( rooms["B"] );
             let urlRoomB = window.location.href + "room.php?rid=" + idRoomB;
-            setRoomLink("#room-b-link", urlRoomB);
+            addRoomLinks(urlRoomA, urlRoomB);
+
+            updateMessage("black", "Generated rooms.");
         };
 
         doAjaxPost( generateUrl, {}, successHandler, errorHandler );
@@ -33,14 +33,27 @@ $(document).ready(function() {
 
         let successHandler = (data) => {
             updateMessage("black", "Cleared rooms.");
-            setRoomLink("#room-a-link", "");
-            setRoomLink("#room-b-link", "");
+            $roomContainer = $("#room-container");
+            $roomContainer.html("");
         };
 
         doAjaxPost( generateUrl, {}, successHandler, errorHandler );
     });
 
-    function setRoomLink(id, url) {
-        $(id).html("<a target=\"_blank\" href=\"" + url + "\">" + url + "</a>");
+    function addRoomLinks(urlA, urlB) {
+        $roomContainer = $("#room-container");
+        $roomContainer.append( getRoomsHtml(urlA, urlB) );
+    }
+
+    function getRoomsHtml(urlA, urlB) {
+        var html = "";
+        html += "<div class=\"row\">";
+        html += "    <div class=\"u-full-width\">";
+        html += "        <span>Room A: </span><a target=\"_blank\" href=\"" + urlA + "\">" + urlA + "</a><br>";
+        html += "        <span>Room B: </span><a target=\"_blank\" href=\"" + urlB + "\">" + urlB + "</a><br>";
+        html += "    </div>";
+        html += "</div>";
+        html += "<br />";
+        return html;
     }
 });

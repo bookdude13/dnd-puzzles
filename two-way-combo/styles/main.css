@@ -2,6 +2,11 @@
   background-image: url('../assets/wall_stone.jpg');
 }*/
 
+/* Props broc.seib https://stackoverflow.com/questions/14217902/how-to-set-empty-span-height-equal-to-default-line-height */
+span:empty:before {
+  content: "\200b";
+}
+
 .gem, .light {
   max-width: 50%;
   box-sizing: border-box;
@@ -15,6 +20,12 @@
 
 .text-center {
   text-align: center;
+}
+
+#btn-generate-rooms,
+#btn-clear-rooms {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .gem-wheel {
