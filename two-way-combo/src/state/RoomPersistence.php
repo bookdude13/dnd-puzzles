@@ -12,6 +12,7 @@ class RoomPersistence
     private PDOStatement $stmt_insert_room_pair;
     private PDOStatement $stmt_clear_rooms;
     private PDOStatement $stmt_clear_room_pairs;
+    private PDOStatement $stmt_update_room;
 
     public static function instance(): RoomPersistence {
         if ( null === self::$_instance ) {
@@ -52,6 +53,11 @@ class RoomPersistence
         );
         $this->stmt_clear_room_pairs = $pdo->prepare(
             "DELETE FROM twowaycombo_room_pair"
+        );
+        $this->stmt_update_room = $pdo->prepare(
+            "UPDATE twowaycombo_room
+            SET wheel_0 = :w0, wheel_1 = :w1, wheel_2 = :w2, wheel_3 = :w3
+            WHERE room_id = :rid"
         );
     }
 
@@ -106,6 +112,18 @@ class RoomPersistence
         return $result;
     }
 
+    private function _update_room( string $room_id, array $wheel_states ): void {
+        error_log($room_id);
+        $this->stmt_update_room->bindValue( ':w0', $wheel_states[0], PDO::PARAM_STR );
+        $this->stmt_update_room->bindValue( ':w1', $wheel_states[1], PDO::PARAM_STR );
+        $this->stmt_update_room->bindValue( ':w2', $wheel_states[2], PDO::PARAM_STR );
+        $this->stmt_update_room->bindValue( ':w3', $wheel_states[3], PDO::PARAM_STR );
+        $this->stmt_update_room->bindValue( ':rid', $room_id, PDO::PARAM_STR );
+        $this->stmt_update_room->execute();
+        $count = $this->stmt_update_room->rowCount();
+        error_log('Count: ' . $count);
+    }
+
     public function add_rooms( RoomState $room_a, RoomState $room_b ): bool {
         try {
             $this->_add_room( $room_a );
@@ -143,5 +161,16 @@ class RoomPersistence
             "room_a" => $room_a,
             "room_b" => $room_b
         );
+    }
+
+    public function update( RoomState $updated_room ): bool {
+        try {
+            $this->_update_room( $updated_room->id, $updated_room->wheel_states );
+        } catch ( Exception $ex ) {
+            error_log( "Failed to update room: " . $ex->getMessage() );
+            return false;
+        }
+
+        return true;
     }
 }

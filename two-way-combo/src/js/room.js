@@ -4,12 +4,6 @@ $(document).ready(function() {
         $("#puzzle-container").html(html);
     }
 
-    function getRoomId() {
-        let currentUrl = new URL(document.location);
-        let params = currentUrl.searchParams;
-        return params.get("rid");
-    }
-
     function updatePuzzle() {
         let errorHandler = (message) => {
             console.error("Failed to update puzzle:");
@@ -19,6 +13,18 @@ $(document).ready(function() {
         let successHandler = (data) => {
             let puzzleHtml = data["html"];
             setPuzzle(puzzleHtml);
+
+            $(".btn-rotate-left").click(function() {
+                let parent = $(this).parents("div.gem-wheel-container").first();
+                let wheelIndex = parent.data("index");
+                rotateWheel( wheelIndex, "left" );
+            });
+        
+            $(".btn-rotate-right").click(function() {
+                let parent = $(this).parents("div.gem-wheel-container").first();
+                let wheelIndex = parent.data("index");
+                rotateWheel( wheelIndex, "right" );
+            });
         }
 
         let currentUrl = window.location.href;
@@ -27,13 +33,27 @@ $(document).ready(function() {
     }
 
     updatePuzzle();
-    setInterval(updatePuzzle, 1000);
+    //setInterval(updatePuzzle, 1000);
 
-    $(".btn-rotate-left").click(function() {
-        let index = $(this).data('index');
-    });
+    function rotateWheel( wheel_index, direction ) {
+        let errorHandler = (message) => {
+            console.error("Failed to update room state:");
+            console.error(message);
+        };
 
-    $(".btn-rotate-right").click(function() {
-        console.log("right");
-    });
+        let successHandler = (data) => {
+            console.log("updated");
+        }
+
+        let updateData = {
+            "update": {
+                "wheel_index": wheel_index,
+                "direction": direction    
+            }
+        };
+
+        let currentUrl = window.location.href;
+        let updateUrl = currentUrl.replace("room.php", "update_puzzle.php");
+        doAjaxPost( updateUrl, updateData, successHandler, errorHandler );
+    }
 });

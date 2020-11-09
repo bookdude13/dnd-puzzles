@@ -17,8 +17,7 @@ class GemWheelRow implements iRenderable
 
         $this->_id = 'gem-wheels-' . $color;
         for ($i = 0; $i < $num_wheels; $i++) {
-            $id = 'gem-wheel-' . $color . '-' . strval($i);
-            $this->_wheels[] = new GemWheel( $id, $color, $wheel_states[$i] );
+            $this->_wheels[] = new GemWheel( $i, $color, $wheel_states[$i] );
         }
     }
 

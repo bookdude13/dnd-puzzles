@@ -1,7 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../Constants.php';
+require_once __DIR__ . '/../Categories.php';
 require_once __DIR__ . '/DtoRoom.php';
+require_once __DIR__ . '/StateUpdate.php';
 
 class RoomState
 {
@@ -12,12 +13,13 @@ class RoomState
     public array $wheel_states;
 
     public function __construct(
+        string $room_id,
         array $light_states,
         array $green_gem_states,
         array $white_gem_states,
         array $wheel_states
     ) {
-        $this->id = $this->_generate_id();
+        $this->id = $room_id;
         $this->light_states = $light_states;
         $this->green_gem_states = $green_gem_states;
         $this->white_gem_states = $white_gem_states;
@@ -25,7 +27,7 @@ class RoomState
     }
 
     // Props MichelAyres https://stackoverflow.com/questions/21671179/how-to-generate-a-new-guid
-    private function _generate_id(): string {
+    private static function _generate_id(): string {
         if (function_exists('com_create_guid') === true)
         {
             return trim(com_create_guid(), '{}');
@@ -41,20 +43,43 @@ class RoomState
     }
 
     public static function create_new(): RoomState {
-        $green_gem_states = Constants::$gem_categories;
-        $white_gem_states = Constants::$gem_categories;
-        $wheel_states = Constants::$gem_categories;
+        $green_gem_states = Categories::$gem_categories;
+        $white_gem_states = Categories::$gem_categories;
+        $wheel_states = Categories::$gem_categories;
 
         shuffle( $green_gem_states );
         shuffle( $white_gem_states );
         shuffle( $wheel_states );
 
         return new RoomState(
+            self::_generate_id(),
             array( false, false ),
             $green_gem_states,
             $white_gem_states,
             $wheel_states
         );
+    }
+
+    public function update( StateUpdate $update ): bool {
+        $index = $update->wheel_index;
+        if ( $index < 0 || $index > 4 ) {
+            error_log( "Update has wheel_index out of range");
+            return false;
+        }
+
+        $curr_category = $this->wheel_states[ $index ];
+        if ( "right" === $update->direction ) {
+            $this->wheel_states[ $index ] = Categories::prev_category( $curr_category );
+            return RoomPersistence::instance()->update( $this );
+        } else if ( "left" === $update->direction ) {
+            $this->wheel_states[ $index ] = Categories::next_category( $curr_category );
+            return RoomPersistence::instance()->update( $this );
+        } else {
+            error_log( "Unknown direction: " . $update->direction );
+            return false;
+        }
+
+        return true;
     }
 
     private static function _get_light_state( $wheel_states, $code ): bool {
@@ -112,6 +137,6 @@ class RoomState
             self::_get_light_state( $wheel_states_b, $code_a )
         );
 
-        return new RoomState( $light_states, $wheel_states_b, $code_a, $wheel_states_a );
+        return new RoomState( $room_a->room_id, $light_states, $wheel_states_b, $code_a, $wheel_states_a );
     }
 }
