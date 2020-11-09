@@ -1,7 +1,10 @@
 
 $(document).ready(function() {
     function setPuzzle( html ) {
-        $("#puzzle-container").html(html);
+        let container = $("#puzzle-container");
+        if ( html !== container.html() ) {
+            container.html(html);
+        }
     }
 
     function updatePuzzle() {
@@ -13,18 +16,6 @@ $(document).ready(function() {
         let successHandler = (data) => {
             let puzzleHtml = data["html"];
             setPuzzle(puzzleHtml);
-
-            $(".btn-rotate-left").click(function() {
-                let parent = $(this).parents("div.gem-wheel-container").first();
-                let wheelIndex = parent.data("index");
-                rotateWheel( wheelIndex, "left" );
-            });
-        
-            $(".btn-rotate-right").click(function() {
-                let parent = $(this).parents("div.gem-wheel-container").first();
-                let wheelIndex = parent.data("index");
-                rotateWheel( wheelIndex, "right" );
-            });
         }
 
         let currentUrl = window.location.href;
@@ -33,7 +24,19 @@ $(document).ready(function() {
     }
 
     updatePuzzle();
-    //setInterval(updatePuzzle, 1000);
+    setInterval(updatePuzzle, 100);
+
+    $("#puzzle-container").on('click', '.btn-rotate-left', {}, function() {
+        let parent = $(this).parents("div.gem-wheel-container").first();
+        let wheelIndex = parent.data("index");
+        rotateWheel( wheelIndex, "left" );
+    });
+
+    $("#puzzle-container").on('click', '.btn-rotate-right', {}, function() {
+        let parent = $(this).parents("div.gem-wheel-container").first();
+        let wheelIndex = parent.data("index");
+        rotateWheel( wheelIndex, "right" );
+    });
 
     function rotateWheel( wheel_index, direction ) {
         let errorHandler = (message) => {
@@ -42,7 +45,6 @@ $(document).ready(function() {
         };
 
         let successHandler = (data) => {
-            console.log("updated");
         }
 
         let updateData = {
