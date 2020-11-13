@@ -8,7 +8,7 @@ require_once 'src/state/RoomState.php';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Room A</title>
+    <title>Two Way Combo - Admin</title>
     <link rel="stylesheet" href="styles/main.css">
 
     <!-- Skeleton styling -->
