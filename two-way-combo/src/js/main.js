@@ -1,5 +1,29 @@
 
 $(document).ready(function() {
+    function getInitialRooms() {
+        let baseUrl = window.location.href;
+        let getRoomsUrl = baseUrl + 'get_room_pairs.php';
+
+        let errorHandler = (message) => {
+            console.error("Failed to retrieve rooms: " + message);
+        };
+
+        let successHandler = (data) => {
+            let roomPairs = data["room_pairs"];
+            console.debug(roomPairs.length + " room pairs loaded");
+            for (var i = 0; i < roomPairs.length; i++) {
+                let roomPair = roomPairs[i];
+                let urlRoomA = window.location.href + "room.php?rid=" + roomPair["room_id_a"];
+                let urlRoomB = window.location.href + "room.php?rid=" + roomPair["room_id_b"];
+                addRoomLinks(urlRoomA, urlRoomB);
+            }
+
+            updateMessage("black", "Loaded rooms.");
+        };
+
+        doAjaxGet( getRoomsUrl, {}, successHandler, errorHandler );
+    }
+
     $("#btn-generate-rooms").click(function() {
         let baseUrl = window.location.href;
         let generateUrl = baseUrl + 'generate.php';
@@ -56,4 +80,7 @@ $(document).ready(function() {
         html += "<br />";
         return html;
     }
+
+    // Initialization
+    getInitialRooms();
 });

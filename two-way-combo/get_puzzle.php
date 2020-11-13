@@ -16,12 +16,12 @@ if ( null === $room_id ) {
     $response["success"] = false;
     $response["errors"][] = "Invalid room id.";
 } else {
-    $rooms = RoomPersistence::instance()->get_rooms( $room_id );
+    $rooms = RoomPersistence::instance()->get_rooms_for_id( $room_id );
     if ( null === $rooms || 2 !== count( $rooms ) ) {
         $response["success"] = false;
         $response["errors"][] = "Unable to retrieve rooms.";
     } else {
-        $room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
+        $room_state = RoomState::from_dto_rooms( $rooms["room_main"], $rooms["room_secondary"] );
         $puzzle = new Puzzle( $room_state );
         $response["success"] = true;
         $response["data"] = array(

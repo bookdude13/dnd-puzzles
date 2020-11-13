@@ -3,6 +3,7 @@
 require_once __DIR__ . "/Persistence.php";
 require_once __DIR__ . "/RoomState.php";
 require_once __DIR__ . "/DtoRoom.php";
+require_once __DIR__ . "/DtoRoomPair.php";
 
 class RoomPersistence
 {
@@ -10,9 +11,12 @@ class RoomPersistence
 
     private PDOStatement $stmt_insert_room;
     private PDOStatement $stmt_insert_room_pair;
+    private PDOStatement $stmt_get_room;
     private PDOStatement $stmt_clear_rooms;
     private PDOStatement $stmt_clear_room_pairs;
     private PDOStatement $stmt_update_room;
+    private PDOStatement $stmt_get_room_pair;
+    private PDOStatement $stmt_get_room_pairs;
 
     public static function instance(): RoomPersistence {
         if ( null === self::$_instance ) {
@@ -41,13 +45,6 @@ class RoomPersistence
             "SELECT * FROM twowaycombo_room
             WHERE room_id = ?"
         );
-        $this->stmt_get_other_room = $pdo->prepare(
-            "SELECT * FROM twowaycombo_room
-            WHERE room_id = (
-                SELECT room_id_b FROM twowaycombo_room_pair
-                WHERE room_id_a = ?
-            )"
-        );
         $this->stmt_clear_rooms = $pdo->prepare(
             "DELETE FROM twowaycombo_room"
         );
@@ -58,6 +55,15 @@ class RoomPersistence
             "UPDATE twowaycombo_room
             SET wheel_0 = :w0, wheel_1 = :w1, wheel_2 = :w2, wheel_3 = :w3
             WHERE room_id = :rid"
+        );
+        $this->stmt_get_room_pair = $pdo->prepare(
+            "SELECT room_id_a, room_id_b
+            FROM twowaycombo_room_pair
+            WHERE room_id_a = :rid OR room_id_b = :rid"
+        );
+        $this->stmt_get_room_pairs = $pdo->prepare(
+            "SELECT room_id_a, room_id_b
+            FROM twowaycombo_room_pair"
         );
     }
 
@@ -80,11 +86,6 @@ class RoomPersistence
             $room_id_a,
             $room_id_b
         ]);
-
-        $this->stmt_insert_room_pair->execute([
-            $room_id_b,
-            $room_id_a
-        ]);
     }
 
     private function _clear_rooms(): void {
@@ -102,18 +103,28 @@ class RoomPersistence
         return $result;
     }
 
-    private function _get_other_room( string $room_id ): DtoRoom {
-        $this->stmt_get_other_room->setFetchMode( PDO::FETCH_CLASS, "DtoRoom" );
-        $this->stmt_get_other_room->execute([ $room_id ]);
-        $result = $this->stmt_get_other_room->fetch();
+    private function _get_room_pair( string $room_id ): DtoRoomPair {
+        $this->stmt_get_room_pair->setFetchMode( PDO::FETCH_CLASS, "DtoRoomPair" );
+        $this->stmt_get_room_pair->bindValue( ':rid', $room_id );
+        $this->stmt_get_room_pair->execute();
+        $result = $this->stmt_get_room_pair->fetch();
         if ( false === $result ) {
-            throw new Exception("RoomNotFound");
+            throw new Exception("RoomPairNotFound");
+        }
+        return $result;
+    }
+
+    private function _get_room_pairs(): array {
+        $this->stmt_get_room_pairs->setFetchMode( PDO::FETCH_CLASS, "DtoRoomPair" );
+        $this->stmt_get_room_pairs->execute();
+        $result = $this->stmt_get_room_pairs->fetchAll();
+        if ( false === $result ) {
+            throw new Exception("RoomPairsNotFound");
         }
         return $result;
     }
 
     private function _update_room( string $room_id, array $wheel_states ): void {
-        error_log($room_id);
         $this->stmt_update_room->bindValue( ':w0', $wheel_states[0], PDO::PARAM_STR );
         $this->stmt_update_room->bindValue( ':w1', $wheel_states[1], PDO::PARAM_STR );
         $this->stmt_update_room->bindValue( ':w2', $wheel_states[2], PDO::PARAM_STR );
@@ -121,7 +132,6 @@ class RoomPersistence
         $this->stmt_update_room->bindValue( ':rid', $room_id, PDO::PARAM_STR );
         $this->stmt_update_room->execute();
         $count = $this->stmt_update_room->rowCount();
-        error_log('Count: ' . $count);
     }
 
     public function add_rooms( RoomState $room_a, RoomState $room_b ): bool {
@@ -148,19 +158,36 @@ class RoomPersistence
         return true;
     }
 
-    public function get_rooms( string $primary_room_id ): ?array {
+    public function get_rooms_for_id( string $room_id ): ?array {
         try {
-            $room_a = $this->_get_room( $primary_room_id );
-            $room_b = $this->_get_other_room( $primary_room_id );
+            $room_pair = $this->_get_room_pair( $room_id );
+            if ( $room_id === $room_pair->room_id_a ) {
+                $room_main = $this->_get_room( $room_pair->room_id_a );
+                $room_secondary = $this->_get_room( $room_pair->room_id_b );    
+            } else {
+                $room_main = $this->_get_room( $room_pair->room_id_b );
+                $room_secondary = $this->_get_room( $room_pair->room_id_a );    
+            }
         } catch ( Exception $ex ) {
             error_log( "Failed to get rooms: " . $ex->getMessage() );
             return null;
         }
 
         return array(
-            "room_a" => $room_a,
-            "room_b" => $room_b
+            "room_main" => $room_main,
+            "room_secondary" => $room_secondary
         );
+    }
+
+    public function get_room_pairs(): ?array {
+        try {
+            $room_pairs = $this->_get_room_pairs();
+        } catch ( Exception $ex ) {
+            error_log( "Failed to get room pairs: " . $ex->getMessage() );
+            return null;
+        }
+
+        return $room_pairs;
     }
 
     public function update( RoomState $updated_room ): bool {

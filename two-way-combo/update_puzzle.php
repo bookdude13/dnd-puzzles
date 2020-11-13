@@ -17,13 +17,12 @@ if ( null === $room_id || null === $update ) {
     $response["success"] = false;
     $response["errors"][] = "Invalid request.";
 } else {
-    $rooms = RoomPersistence::instance()->get_rooms( $room_id );
+    $rooms = RoomPersistence::instance()->get_rooms_for_id( $room_id );
     if ( null === $rooms || 2 !== count( $rooms ) ) {
         $response["success"] = false;
         $response["errors"][] = "Unable to retrieve rooms.";
     } else {
-        $room_state = RoomState::from_dto_rooms( $rooms["room_a"], $rooms["room_b"] );
-        error_log("RoomState " . json_encode($room_state));
+        $room_state = RoomState::from_dto_rooms( $rooms["room_main"], $rooms["room_secondary"] );
         $update_success = $room_state->update( $update );
         if ( false === $update_success ) {
             $response["success"] = false;
